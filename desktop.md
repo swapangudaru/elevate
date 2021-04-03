@@ -26,7 +26,7 @@ The 1st sync can take hours to complete if you have a large history (Enter _"id:
 
 1. Unzip the downloaded archive to a location of your choice.
 
-1. Using the **File connector**, select and sync the folder _"activities"_.
+1. Using the **File connector**, select and sync the folder ⇾ _**"activities"**_.
 
 1. Then, on the **Strava connector**, click _Configure_ and **tick** the option _**Override existing activities names and types with those fetched from Strava**_.
 
