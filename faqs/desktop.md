@@ -4,6 +4,27 @@ Click the _[3-dots]_ button in top right and corner, then _Advanced menu_ > _Rec
 
 [](id:calculate-compute-history-activity-activities)
 
+### How to transfer athlete settings from legacy web extension to desktop app?
+
+From old extension version **v6 or less**:
+
+1. Open the old chrome extension app in your browser (version 6 or less only).
+1. Press `F12` to display the developer's tools.
+1. Click on `Console` tab.
+1. `Copy` & `Paste` the following code into developer `Console`:
+   ```javascript
+   chrome.storage.local.get(null, r => console.log(btoa(JSON.stringify(r.athlete.datedAthleteSettings))));
+   ```
+1. Tap `enter`.
+1. A backup string should be returned as a result. It should be something like: `W3sibWF4S......m51bGx9XQ==`
+1. `Copy` this string in your clipboard.
+1. In the desktop app, go to `Athlete Settings` and click on upload athlete settings button.
+1. `Paste` the string previously copied.
+1. Your settings should be back ;)
+
+[](id:transfert-athlete-settings-extension-desktop)
+
+
 ### Why 1st Strava sync takes so much time?
 
 When syncing the Strava connector you probably got the following message: 
@@ -23,13 +44,9 @@ This means that your 1st Strava sync can take many hours to finish. Upcoming syn
 The 1st sync can take hours to complete if you have a large history (Enter _"id:strava-connector-slow-first-sync"_ in the help search bar for more info). To bypass this, here is what you can do:
 
 1. First [request a download of your activities **(in step 2)**](https://www.strava.com/athlete/delete_your_account).
-
 1. Unzip the downloaded archive to a location of your choice.
-
 1. Using the **File connector**, select and sync the folder ⇾ _**"activities"**_.
-
 1. Then, on the **Strava connector**, click _Configure_ and **tick** the option _**Override existing activities names and types with those fetched from Strava**_.
-
 1. Sync now the **Strava connector** with _Sync all activities_ button.
 Only the activities names and types previously synced by the file connector will be updated. Every others and "heavy" network calls to Strava will be avoided.
 

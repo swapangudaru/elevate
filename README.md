@@ -1,5 +1,4 @@
-# Help and Frequently Asked Questions by platforms:
+# Documentation
 
-- ### [All platforms](./common.md)
-- ### [Desktop specific](./desktop.md)
-- ### [Web Extension specific](./extension.md)
+- ### [Frequently Asked Questions](faqs/README.md)
+- ### [Known Issues](known-issues/README.md)
