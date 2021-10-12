@@ -12,4 +12,6 @@ export class PaceDataModel {
 	public gradeAdjustedPaceZones: ZoneModel[];
 	public runningStressScore: number;
 	public runningStressScorePerHour: number;
+	//public vo2Max: any;
+
 }

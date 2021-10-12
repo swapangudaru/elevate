@@ -55,7 +55,11 @@ describe("FitnessService", () => {
 			heartRateImpulseMode: HeartRateImpulseMode.HRSS,
 			initializedFitnessTrendModel: {
 				atl: null,
-				ctl: null
+				ctl: null,
+				vo2:null,
+				tsb:null,
+
+
 			},
 			allowEstimatedPowerStressScore: false,
 			allowEstimatedRunningStressScore: false,
@@ -2983,7 +2987,10 @@ describe("FitnessService", () => {
 			// When
 			fitnessTrendConfigModel.initializedFitnessTrendModel = {
 				atl: 100,
-				ctl: 50
+				ctl: 50,
+				vo2: 100,
+				tsb:50,
+
 			};
 
 			const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(fitnessTrendConfigModel,
@@ -2998,11 +3005,14 @@ describe("FitnessService", () => {
 				const firstDay = _.first(fitnessTrend);
 				expect(firstDay.ctl).toEqual(fitnessTrendConfigModel.initializedFitnessTrendModel.ctl);
 				expect(firstDay.atl).toEqual(fitnessTrendConfigModel.initializedFitnessTrendModel.atl);
+				expect(firstDay.vo2).toEqual(fitnessTrendConfigModel.initializedFitnessTrendModel.vo2);
+
 				expect(firstDay.tsb).toEqual(fitnessTrendConfigModel.initializedFitnessTrendModel.ctl - fitnessTrendConfigModel.initializedFitnessTrendModel.atl);
 
 				const secondDay = fitnessTrend[1];
 				expect(secondDay.ctl).toBeGreaterThan(fitnessTrendConfigModel.initializedFitnessTrendModel.ctl);
 				expect(secondDay.atl).toBeGreaterThan(fitnessTrendConfigModel.initializedFitnessTrendModel.atl);
+				expect(secondDay.vo2).toBeGreaterThan(fitnessTrendConfigModel.initializedFitnessTrendModel.vo2);
 
 				done();
 

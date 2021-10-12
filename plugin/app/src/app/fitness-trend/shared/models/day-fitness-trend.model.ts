@@ -7,7 +7,7 @@ export class DayFitnessTrendModel extends DayStressModel {
 
 	public static readonly DATE_FORMAT: string = "YYYY-MM-DD";
 
-	constructor(dayStress: DayStressModel, ctl: number, atl: number, tsb: number, prevCtl?: number, prevAtl?: number, prevTsb?: number) {
+	constructor(dayStress: DayStressModel, ctl: number, atl: number, vo2 : number, tsb: number, prevCtl?: number, prevAtl?: number,prevVo2?:number, prevTsb?: number) {
 		super(dayStress.date, dayStress.previewDay);
 
 		this.ids = dayStress.ids;
@@ -18,6 +18,7 @@ export class DayFitnessTrendModel extends DayStressModel {
 		this.powerStressScore = dayStress.powerStressScore;
 		this.runningStressScore = dayStress.runningStressScore;
 		this.swimStressScore = dayStress.swimStressScore;
+		this.vo2max =dayStress.vo2max;
 		this.finalStressScore = dayStress.finalStressScore;
 		this.athleteSnapshot = (dayStress.athleteSnapshot) ? dayStress.athleteSnapshot : null;
 
@@ -26,11 +27,11 @@ export class DayFitnessTrendModel extends DayStressModel {
 		this.ctl = ctl;
 		this.atl = atl;
 		this.tsb = tsb;
-
+		this.vo2 = vo2;
 		this.prevCtl = (prevCtl) ? prevCtl : null;
 		this.prevAtl = (prevAtl) ? prevAtl : null;
 		this.prevTsb = (prevTsb) ? prevTsb : null;
-
+		this.prevVo2  = (prevVo2) ? prevVo2:null; 
 		this.trainingZone = this.findTrainingZone(this.tsb);
 	}
 
@@ -39,10 +40,14 @@ export class DayFitnessTrendModel extends DayStressModel {
 	public ctl: number;
 	public atl: number;
 	public tsb: number;
+	public vo2: number;
+
 
 	public prevCtl: number;
 	public prevAtl: number;
 	public prevTsb: number;
+	public prevVo2: number;
+
 
 	public trainingZone: TrainingZone;
 	public trainingZoneAsString: string;
@@ -58,6 +63,9 @@ export class DayFitnessTrendModel extends DayStressModel {
 	public printForm(): number {
 		return _.floor(this.tsb, 1);
 	}
+	public printvo2max(): number {
+		return _.floor(this.vo2, 1);
+	}
 
 	public printDeltaFitness(): string {
 		if (!this.prevCtl) {
@@ -67,6 +75,12 @@ export class DayFitnessTrendModel extends DayStressModel {
 		return ((delta >= 0) ? "+" : "") + _.round(delta, 1);
 	}
 
+	public printDeltaVo2max(): string {
+		if (!this.prevVo2) {
+			return null;
+		}
+		return JSON.stringify( _.round(this.prevVo2));
+	}
 	public printDeltaFatigue(): string {
 		if (!this.prevAtl) {
 			return null;
@@ -112,6 +126,7 @@ export class DayFitnessTrendModel extends DayStressModel {
 		}
 		return this.activitiesName.join("; ");
 	}
+	
 
 	public printTypes(defaultEmptyValue?: string): string {
 

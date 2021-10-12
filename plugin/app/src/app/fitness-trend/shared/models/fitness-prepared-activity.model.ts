@@ -15,4 +15,5 @@ export class FitnessPreparedActivityModel {
 	public powerStressScore?: number;
 	public runningStressScore?: number;
 	public swimStressScore?: number;
+	public vo2Max?:any;
 }

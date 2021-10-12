@@ -12,4 +12,5 @@ export class SpeedDataModel {
 	public standardDeviationSpeed: number;
 	public speedZones: ZoneModel[];
 	public genuineGradeAdjustedAvgSpeed: number;
+	//public vo2Max:any;
 }

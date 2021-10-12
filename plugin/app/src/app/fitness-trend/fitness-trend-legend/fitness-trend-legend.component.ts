@@ -10,9 +10,9 @@ import { Subscription } from "rxjs";
 })
 export class FitnessTrendLegendComponent implements OnInit, OnDestroy {
 
-	public readonly MAX_ACTIVITIES_LEGEND_SHOWN: number = 2;
-	public readonly MAX_MULTIPLE_ACTIVITIES_CHAR_COUNT_DISPLAYED: number = 30;
-	public readonly MAX_SINGLE_ACTIVITY_CHAR_COUNT_DISPLAYED: number = 90;
+	public readonly MAX_ACTIVITIES_LEGEND_SHOWN: number = 4;
+	public readonly MAX_MULTIPLE_ACTIVITIES_CHAR_COUNT_DISPLAYED: number = 40;
+	public readonly MAX_SINGLE_ACTIVITY_CHAR_COUNT_DISPLAYED: number = 120;
 
 	@Input("isTrainingZonesEnabled")
 	public isTrainingZonesEnabled;

@@ -36,7 +36,7 @@ export class FitnessTrendComponent implements OnInit {
 
 	public static readonly DEFAULT_CONFIG: FitnessTrendConfigModel = {
 		heartRateImpulseMode: HeartRateImpulseMode.HRSS,
-		initializedFitnessTrendModel: {ctl: null, atl: null},
+		initializedFitnessTrendModel: {ctl: null, atl: null, vo2:null, tsb:null},
 		allowEstimatedPowerStressScore: false,
 		allowEstimatedRunningStressScore: false,
 		ignoreBeforeDate: null,

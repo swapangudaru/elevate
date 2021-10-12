@@ -81,17 +81,19 @@
 	<div fxFill fxLayout="row" fxLayoutAlign="end start" class="mat-headline">
 
 		<div fxFlex fxLayout="row" fxLayoutAlign="end start">
-			<div fxFlex="150px" class="ctl-value">
+			<div fxFlex="130px" class="ctl-value">
 				Fitness {{viewedDay.printFitness()}}
 			</div>
 
 			<span fxFlex="1"></span>
 
-			<div fxFlex="150px" class="atl-value">
+			<div fxFlex="130px" class="atl-value">
 				Fatigue {{viewedDay.printFatigue()}}
 			</div>
 
 			<span fxFlex="1"></span>
+
+			
 
 			<div fxFlex="130px" class="tsb-value">
 				<span *ngIf="isTrainingZonesEnabled">Form {{viewedDay.printForm()}}</span>
@@ -99,6 +101,13 @@
 					Form {{viewedDay.printForm()}}
 				</div>
 			</div>
+			<span fxFlex="1"></span>
+
+			<div fxFlex="130px" class="vo2-value">
+				Vo2 Max {{viewedDay.printvo2max()}}
+			</div>
+
+			<span fxFlex="1"></span>
 
 			<div *ngIf="isTrainingZonesEnabled"
 				 fxFlex="120px" fxFlexAlign="end" class="tsb-value mat-body-1">
@@ -106,6 +115,7 @@
 					➔&nbsp;&nbsp;{{this.viewedDay.printTrainingZone()}} zone
 				</div>
 			</div>
+
 		</div>
 	</div>
 </div>

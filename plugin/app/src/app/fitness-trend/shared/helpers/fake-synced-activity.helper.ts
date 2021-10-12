@@ -52,6 +52,7 @@ export class FakeSyncedActivityHelper {
 				heartRateZones: null,
 				lowerQuartileHeartRate: avgHr / 4,
 				maxHeartRate: avgHr * 1.5,
+				Vo2Max: avgHr * 1.5,
 				medianHeartRate: avgHr / 2,
 				upperQuartileHeartRate: (avgHr / 4) * 3
 			};
@@ -75,7 +76,8 @@ export class FakeSyncedActivityHelper {
 				best20min: avgWatts * 1.5,
 				bestEightyPercent: avgWatts,
 				weightedWattsPerKg: avgWatts * 1.25 / 70,
-				powerCurve: []
+				powerCurve: [],
+				vo2Max:null
 			};
 		}
 
@@ -92,6 +94,7 @@ export class FakeSyncedActivityHelper {
 				gradeAdjustedPaceZones: null,
 				runningStressScore: (type === "Run" || type === "VirtualRun") ? avgPace : null,
 				runningStressScorePerHour: (type === "Run" || type === "VirtualRun") ? avgPace : null,
+				vo2Max:null,
 			};
 		}
 		return fakeActivity;

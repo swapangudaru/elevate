@@ -57,7 +57,8 @@ describe("FitnessTrendGraphComponent", () => {
 			heartRateImpulseMode: HeartRateImpulseMode.HRSS,
 			initializedFitnessTrendModel: {
 				atl: null,
-				ctl: null
+				ctl: null,
+				vo2:null,
 			},
 			allowEstimatedPowerStressScore: false,
 			allowEstimatedRunningStressScore: false,

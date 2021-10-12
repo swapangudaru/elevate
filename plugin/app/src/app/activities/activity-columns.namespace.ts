@@ -442,6 +442,8 @@ export namespace ActivityColumns {
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.lowerQuartileHeartRate", "bpm", "25% HR").setDescription("Lower Quartile Bpm"),
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.medianHeartRate", "bpm", "50% HR").setDescription("Median Bpm"),
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.upperQuartileHeartRate", "bpm", "75% HR").setDescription("Upper Quartile Bpm"),
+			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.Vo2Max","bpm","Vo2 Max"),
+
 			/**
 			 * Cadence
 			 */

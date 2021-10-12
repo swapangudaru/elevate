@@ -13,7 +13,8 @@ import { FitnessTrendConfigModel } from "../models/fitness-trend-config.model";
 
 @Injectable()
 export class FitnessService {
-
+	heartData: any;
+	activityData: any;
 	public static readonly FUTURE_DAYS_PREVIEW: number = 14;
 	public static readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = 0.85;
 
@@ -29,12 +30,12 @@ export class FitnessService {
 	 * @returns {Promise<FitnessPreparedActivityModel[]>}
 	 */
 	public prepare(fitnessTrendConfigModel: FitnessTrendConfigModel,
-				   powerMeterEnable: boolean,
-				   swimEnable: boolean,
-				   skipActivityTypes?: string[]): Promise<FitnessPreparedActivityModel[]> {
+		powerMeterEnable: boolean,
+		swimEnable: boolean,
+		skipActivityTypes?: string[]): Promise<FitnessPreparedActivityModel[]> {
 
 		return new Promise((resolve: (result: FitnessPreparedActivityModel[]) => void,
-							reject: (error: AppError) => void) => {
+			reject: (error: AppError) => void) => {
 
 			return this.activityService.fetch().then((activities: SyncedActivityModel[]) => {
 
@@ -46,7 +47,7 @@ export class FitnessService {
 
 				activities = this.filterActivities(activities, fitnessTrendConfigModel.ignoreBeforeDate,
 					fitnessTrendConfigModel.ignoreActivityNamePatterns);
-
+				this.activityData = activities;
 				// Check if activities filtered are not empty
 				if (_.isEmpty(activities) || activities.length === 0) {
 					reject(new AppError(AppError.FT_ALL_ACTIVITIES_FILTERED,
@@ -114,11 +115,14 @@ export class FitnessService {
 					};
 
 					if (hasHeartRateData) {
+						this.heartData = activity.extendedStats.heartRateData;
 
 						if (fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) {
 							fitnessReadyActivity.trainingImpulseScore = activity.extendedStats.heartRateData.TRIMP;
 						} else if (fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS) {
 							fitnessReadyActivity.heartRateStressScore = activity.extendedStats.heartRateData.HRSS;
+						} else if (activity.extendedStats.heartRateData.Vo2Max) {
+							fitnessReadyActivity.vo2Max = activity.extendedStats.heartRateData.Vo2Max;
 						}
 					}
 
@@ -154,12 +158,13 @@ export class FitnessService {
 	 * @returns {Promise<DayStressModel[]>}
 	 */
 	public generateDailyStress(fitnessTrendConfigModel: FitnessTrendConfigModel,
-							   powerMeterEnable: boolean,
-							   swimEnable: boolean,
-							   skipActivityTypes?: string[]): Promise<DayStressModel[]> {
+		powerMeterEnable: boolean,
+		swimEnable: boolean,
+		skipActivityTypes?: string[],): Promise<DayStressModel[]> {
 
 		return new Promise((resolve: (activityDays: DayStressModel[]) => void,
-							reject: (error: string) => void) => {
+
+			reject: (error: string) => void) => {
 
 			this.prepare(fitnessTrendConfigModel, powerMeterEnable, swimEnable, skipActivityTypes)
 				.then((fitnessPreparedActivities: FitnessPreparedActivityModel[]) => {
@@ -224,49 +229,92 @@ export class FitnessService {
 	 * @returns {Promise<DayFitnessTrendModel[]>}
 	 */
 	public computeTrend(fitnessTrendConfigModel: FitnessTrendConfigModel,
-						isPowerMeterEnabled: boolean,
-						isSwimEnabled: boolean,
-						skipActivityTypes?: string[]): Promise<DayFitnessTrendModel[]> {
+		isPowerMeterEnabled: boolean,
+		isSwimEnabled: boolean,
+		skipActivityTypes?: string[]): Promise<DayFitnessTrendModel[]> {
 
 		return new Promise((resolve: (fitnessTrend: DayFitnessTrendModel[]) => void,
-							reject: (error: string) => void) => {
+			reject: (error: string) => void) => {
 
 			this.generateDailyStress(fitnessTrendConfigModel, isPowerMeterEnabled, isSwimEnabled, skipActivityTypes)
 				.then((dailyActivity: DayStressModel[]) => {
-
-					let ctl, atl, tsb;
-
+					let ctl, atl, tsb, vo2;
 					const fitnessTrend: DayFitnessTrendModel[] = [];
 
 					let previousDayFitnessTrend: DayFitnessTrendModel = null;
-
-					_.forEach(dailyActivity, (dayStress: DayStressModel, index: number) => {
-
+					var prevVo2 =0;
+					_.forEach (dailyActivity, async (dayStress: DayStressModel, index: number) => {
+						
 						const isPreStartDay = (index === 0);
 
 						if (isPreStartDay) {
 
+
 							if (fitnessTrendConfigModel.initializedFitnessTrendModel) {
+								//console.log("i am in side of fitnessTrendConfigModel.initializedFitnessTrendModel",fitnessTrendConfigModel.initializedFitnessTrendModel)
 								ctl = (!_.isNull(fitnessTrendConfigModel.initializedFitnessTrendModel.ctl)) ? fitnessTrendConfigModel.initializedFitnessTrendModel.ctl : 0;
 								atl = (!_.isNull(fitnessTrendConfigModel.initializedFitnessTrendModel.atl)) ? fitnessTrendConfigModel.initializedFitnessTrendModel.atl : 0;
+								vo2 = (!_.isNull(fitnessTrendConfigModel.initializedFitnessTrendModel.vo2)) ? fitnessTrendConfigModel.initializedFitnessTrendModel.vo2 : 0;
 								tsb = ctl - atl;
 							} else {
-								ctl = atl = tsb = 0;
+								ctl = atl = tsb = vo2 = 0;
 							}
 
+
 						} else {
-							tsb = ctl - atl;
+							console.log(dayStress['date'], "dayStress['date']")
+						await this.activityData.forEach(element => {
+								var FoData = new Date(element['start_time']);
+								var ADate = FoData.toLocaleString().split(',')[0]
+								//console.log(dayStress['date'] , new Date(ADate),"ADateADateADateADateADateADate");
+									var dsDate = new Date(dayStress['date']);
+								var dayStresDate = dsDate.toLocaleString().split(',')[0]
+								var daySDateValue = new Date(dayStresDate); //yyyy-mm-dd
+
+								let actDate = new Date(ADate)
+								var ActivityDate = actDate.toLocaleString().split(',')[0]
+								var ActDateValue = new Date(ActivityDate); //yyyy-mm-dd
+								if (ActDateValue.toDateString() === daySDateValue.toDateString()) {
+										if (!element.extendedStats.heartRateData) {
+											dayStress.vo2max = prevVo2;
+										} else {
+											dayStress.vo2max = element.extendedStats.heartRateData.Vo2Max ? element.extendedStats.heartRateData.Vo2Max : 40
+											prevVo2 =dayStress.vo2max;
+										}
+									}else{
+										dayStress.vo2max =prevVo2;
+									}
+								 
+
+	
+
+								
+
+
+
+							});
+
+
 							ctl = ctl + (dayStress.finalStressScore - ctl) * (1 - Math.exp(-1 / 42));
 							atl = atl + (dayStress.finalStressScore - atl) * (1 - Math.exp(-1 / 7));
+							//vo2 + (dayStress.vo2max - vo2) * (1 - Math.exp(-1 / 7));
+							vo2 = dayStress.vo2max?dayStress.vo2max:20;
+							tsb = ctl - atl;
+							console.log(vo2,"vo222222222222")
+
 						}
 
 						let dayFitnessTrend: DayFitnessTrendModel;
 
 						if (previousDayFitnessTrend) {
-							dayFitnessTrend = new DayFitnessTrendModel(dayStress, ctl, atl, tsb, previousDayFitnessTrend.ctl,
-								previousDayFitnessTrend.atl, previousDayFitnessTrend.tsb);
+							//let result=	this.addVo2max(this.activityData,dayStress)
+							//console.log(result,"resultdataaaa")
+
+							dayFitnessTrend = new DayFitnessTrendModel(dayStress, ctl, atl, vo2, tsb, previousDayFitnessTrend.ctl,
+								previousDayFitnessTrend.atl, previousDayFitnessTrend.vo2, previousDayFitnessTrend.tsb);
+
 						} else {
-							dayFitnessTrend = new DayFitnessTrendModel(dayStress, ctl, atl, tsb);
+							dayFitnessTrend = new DayFitnessTrendModel(dayStress, ctl, atl, vo2, tsb,);
 						}
 
 						if (_.isNumber(dayStress.heartRateStressScore) && dayStress.heartRateStressScore > 0) {
@@ -367,6 +415,7 @@ export class FitnessService {
 						dayActivity.heartRateStressScore = 0;
 					}
 					dayActivity.heartRateStressScore += activity.heartRateStressScore;
+					dayActivity.vo2max = activity.vo2Max;
 				}
 
 				// RSS
@@ -405,6 +454,7 @@ export class FitnessService {
 					dayActivity.finalStressScore += activity.powerStressScore;
 				} else if (activity.heartRateStressScore) {
 					dayActivity.finalStressScore += activity.heartRateStressScore;
+					dayActivity.vo2max += activity.vo2Max;
 				} else if (activity.trainingImpulseScore) {
 					dayActivity.finalStressScore += activity.trainingImpulseScore;
 				} else if (activity.powerStressScore && !activity.hasPowerMeter) {

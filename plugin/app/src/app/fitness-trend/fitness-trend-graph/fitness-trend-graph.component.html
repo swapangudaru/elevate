@@ -61,7 +61,7 @@
 					</tr>
 
 					<tr class="separator">
-						<td colspan="2"></td>
+						<td colspan="4"></td>
 					</tr>
 
 					<!--Fitness, Fatigue & Form-->
@@ -75,11 +75,20 @@
 						<td>{{viewedDay.printFatigue()}}<span *ngIf="viewedDay.prevAtl" class="mat-caption"> ({{viewedDay.printDeltaFatigue()}})</span>
 						</td>
 					</tr>
+					
 					<tr class="tsb-value">
-						<td>Form <span *ngIf="isTrainingZonesEnabled"> ➔ {{viewedDay.printTrainingZone()}}</span></td>
+						<td>Form</td>
 						<td>{{viewedDay.printForm()}}<span *ngIf="viewedDay.prevTsb" class="mat-caption"> ({{viewedDay.printDeltaForm()}})</span>
 						</td>
 					</tr>
+					<tr class="vo2-value">
+						<td>Vo2 Max</td>
+						<td>{{viewedDay.printvo2max()}}<span *ngIf="viewedDay.prevVo2" class="mat-caption"> ({{viewedDay.printDeltaVo2max()}})</span>
+						</td>
+					</tr>
+					
+					
+					
 
 				</table>
 

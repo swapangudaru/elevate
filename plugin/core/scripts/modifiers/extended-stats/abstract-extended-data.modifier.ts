@@ -119,6 +119,7 @@ export abstract class AbstractExtendedDataModifier {
 		let best20minHrUnit = "";
 		let activityHeartRateReserve = "-";
 		let activityHeartRateReserveUnit = "";
+		let vo2max = "-"
 
 		if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
 			trainingImpulse = this.printNumber(this.analysisData.heartRateData.TRIMP) + " <span class=\"summarySubGridTitle\">(" + this.printNumber(this.analysisData.heartRateData.TRIMPPerHour, 1) + " / hour)</span>";
@@ -128,6 +129,12 @@ export abstract class AbstractExtendedDataModifier {
 				best20minHr = this.printNumber(this.analysisData.heartRateData.best20min);
 				best20minHrUnit = "bpm";
 			}
+			if (_.isNumber(this.analysisData.heartRateData.Vo2Max)) {
+				vo2max =this.printNumber(this.analysisData.heartRateData.Vo2Max);
+			}else{
+				vo2max =this.analysisData.heartRateData.Vo2Max?this.analysisData.heartRateData.Vo2Max:"";
+
+			}
 			activityHeartRateReserveUnit = "%  <span class=\"summarySubGridTitle\">(Max: " + this.printNumber(this.analysisData.heartRateData.activityHeartRateReserveMax) + "% @ " + this.analysisData.heartRateData.maxHeartRate + "bpm)</span>";
 		}
 
@@ -135,6 +142,7 @@ export abstract class AbstractExtendedDataModifier {
 		this.insertContentAtGridPosition(1, 1, trainingImpulse, "TRaining IMPulse", "", "displayAdvancedHrData");
 		this.insertContentAtGridPosition(0, 2, best20minHr, "Best 20min Heart Rate", best20minHrUnit, "displayAdvancedHrData");
 		this.insertContentAtGridPosition(1, 2, activityHeartRateReserve, "Heart Rate Reserve Avg", activityHeartRateReserveUnit, "displayAdvancedHrData");
+		this.insertContentAtGridPosition(0, 2, vo2max , "Vo2 Max", "", "displayAdvancedHrData");
 
 		// ...
 		let climbTime = "-";

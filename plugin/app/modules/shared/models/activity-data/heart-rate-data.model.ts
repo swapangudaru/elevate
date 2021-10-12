@@ -15,4 +15,6 @@ export class HeartRateDataModel {
 	public activityHeartRateReserve: number;
 	public activityHeartRateReserveMax: number;
 	public heartRateZones: ZoneModel[];
+	public Vo2Max: any;
+
 }

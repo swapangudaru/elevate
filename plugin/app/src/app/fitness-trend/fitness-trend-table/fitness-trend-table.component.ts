@@ -34,6 +34,8 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	public static readonly COLUMN_CTL: string = "ctl";
 	public static readonly COLUMN_ATL: string = "atl";
 	public static readonly COLUMN_TSB: string = "tsb";
+	public static readonly COLUMN_VO2: string = "vo2";
+
 	public static readonly COLUMN_TRAINING_ZONE: string = "zone";
 	public static readonly COLUMN_ATHLETE_SETTINGS: string = "athleteSettings";
 	public static readonly COLUMN_STRAVA_LINK: string = "link";
@@ -109,6 +111,12 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			header: "Fatigue",
 			type: FitnessTrendColumnType.TEXT,
 			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFatigue()}`
+		},
+		{
+			id: FitnessTrendTableComponent.COLUMN_VO2,
+			header: "Vo2 Max",
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printvo2max()}`
 		},
 		{
 			id: FitnessTrendTableComponent.COLUMN_TSB,
@@ -238,6 +246,9 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 
 				case FitnessTrendTableComponent.COLUMN_ATL:
 					return dayFitnessTrendModel.atl;
+				
+				case FitnessTrendTableComponent.COLUMN_VO2:
+						return dayFitnessTrendModel.vo2;
 
 				case FitnessTrendTableComponent.COLUMN_TSB:
 					return dayFitnessTrendModel.tsb;
@@ -300,6 +311,8 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			exportedFitnessDay.atl = _.floor(dayFitnessTrendModel.atl, 2);
 			exportedFitnessDay.ctl = _.floor(dayFitnessTrendModel.ctl, 2);
 			exportedFitnessDay.tsb = _.floor(dayFitnessTrendModel.tsb, 2);
+			exportedFitnessDay.Vo2 = _.floor(dayFitnessTrendModel.vo2, 2);
+
 			exportedFitnessDay.zone = dayFitnessTrendModel.printTrainingZone();
 
 			exportedFitnessDay.trainingImpulseScore = (dayFitnessTrendModel.trainingImpulseScore) ? _.floor(dayFitnessTrendModel.trainingImpulseScore, 2) : "";

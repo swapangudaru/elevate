@@ -372,7 +372,7 @@ export class ActivityComputer {
 		// Q1 HR
 		// Median HR
 		// Q3 HR
-		const heartRateData: HeartRateDataModel = (!_.isEmpty(activityStream)) ? this.heartRateData(athleteSnapshot, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth) : null;
+		const heartRateData: HeartRateDataModel = (!_.isEmpty(activityStream)) ? this.heartRateData(athleteSnapshot, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth, activityStream.distance) : null;
 
 		// Avg grade
 		// Q1/Q2/Q3 grade
@@ -859,7 +859,7 @@ export class ActivityComputer {
 	}
 
 	protected heartRateData(athleteSnapshot: AthleteSnapshotModel, heartRateArray: number[], timeArray: number[],
-							velocityArray: number[]): HeartRateDataModel {
+							velocityArray: number[],distance): HeartRateDataModel {
 
 		if (_.isEmpty(heartRateArray) || _.isEmpty(timeArray) || _.mean(heartRateArray) === 0) {
 			return null;
@@ -920,7 +920,7 @@ export class ActivityComputer {
 		const heartRateStressScore = ActivityComputer.computeHeartRateStressScore(athleteSnapshot.gender, athleteSnapshot.athleteSettings.maxHr,
 			athleteSnapshot.athleteSettings.restHr, userLthrAlongActivityType, trainingImpulse);
 		const HRSSPerHour: number = heartRateStressScore / hrrSecondsCount * 60 * 60;
-
+		const vo2max: number = 0
 		const averageHeartRate: number = hrSum / hrrSecondsCount;
 		const maxHeartRate: number = _.max(heartRateArray);
 
@@ -940,6 +940,18 @@ export class ActivityComputer {
 			console.warn("No best 60min heart rate available for this range");
 		}
 
+		let Vo2Max;
+		if (this.activityType === "Run") {
+			Vo2Max = Helper.vo2MAxRunning(distance, this.activityType)
+		} else if (this.activityType === "Ride") {
+			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(heartRateArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
+			let best6min = splitCalculator.getBestSplit(60 * 6, true);
+			Vo2Max = Helper.vo2MAxRide(best6min, this.activityType, athleteSnapshot.athleteSettings.weight)
+		} else if (this.activityType === "Swim") {
+			console.log(JSON.stringify(distance))
+			Vo2Max = Helper.vo2swim(distance,this.activityType,heartRateArray,athleteSnapshot.athleteSettings.weight)
+		}
+		console.log(Vo2Max, "Vo2Max")
 		return {
 			HRSS: heartRateStressScore,
 			HRSSPerHour: HRSSPerHour,
@@ -953,6 +965,7 @@ export class ActivityComputer {
 			upperQuartileHeartRate: percentiles[2],
 			averageHeartRate: averageHeartRate,
 			maxHeartRate: maxHeartRate,
+			Vo2Max: Vo2Max,
 			activityHeartRateReserve: Helper.heartRateReserveFromHeartrate(averageHeartRate, athleteSnapshot.athleteSettings.maxHr, athleteSnapshot.athleteSettings.restHr) * 100,
 			activityHeartRateReserveMax: Helper.heartRateReserveFromHeartrate(maxHeartRate, athleteSnapshot.athleteSettings.maxHr, athleteSnapshot.athleteSettings.restHr) * 100,
 		};

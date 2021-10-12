@@ -14,7 +14,7 @@ export class DayStressModel {
 	public powerStressScore?: number = null;
 	public runningStressScore?: number = null;
 	public swimStressScore?: number = null;
-
+	public vo2max?:any=null	
 	public finalStressScore: number = null;
 	public previewDay: boolean;
 

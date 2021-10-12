@@ -184,4 +184,74 @@ export class Helper {
 		}
 		return (1 / speed * 60 * 60);
 	}
+
+	public static vo2MAxRide(best6min,Type,weight){
+		let vo2MaxRide ;
+		if(Type === 'Ride' || Type ==='Handcycle'){
+			let compute = (best6min *10.8) / weight;
+			vo2MaxRide = compute + 7
+			console.log(vo2MaxRide ,"vo2MaxRidevo2MaxRide",weight,best6min)
+			return vo2MaxRide ;
+		}
+		
+	}
+
+	public static vo2MAxRunning(distance, Type) {
+		
+		let arr = distance;
+			let fastsplit =arr.length;
+			for(let i=0 ; i<arr.length;i++){
+				if(arr[i] >=2400){
+					fastsplit=i;
+					console.log(arr[i],"fastsplit",fastsplit)
+					break;
+				};
+			}
+			for(let i=fastsplit;i<arr.length;){
+				if(arr[i]-arr[i-fastsplit] >2400){
+					fastsplit--;
+	
+				}else{
+					i++;
+				}
+			}
+			if(Type ==="Run"){
+				console.log(fastsplit,"fastsplitfastsplit")
+			    let votMax = 85.95 -(3.079 * (fastsplit/60))
+				console.log(votMax,"finalvalue"); 
+				return votMax;
+			}
+			
+	}
+	public static vo2swim(distance, Type,heartRateArray,weight) {
+		let laps =8
+		let arr = distance;
+		let heartRate 
+		let arrIndex 
+			let fastsplit =arr.length;
+			for(let i=0 ; i<arr.length;i++){
+				if(arr[i] >=400){
+					fastsplit=i;
+					console.log(arr[i],"fastsplit",fastsplit)
+					break;
+				};
+			}
+			for(let i=fastsplit;i<arr.length;){
+				if(arr[i]-arr[i-fastsplit] >400){
+					fastsplit--;
+					arrIndex =i;
+					heartRate =heartRateArray[arrIndex];
+					
+				}else{
+					i++;
+				}
+			}
+			if(Type ==="Swim"){
+				let result = (14.085)+((1.858*laps)-(0.192*weight))+(0.111*(heartRate));
+					console.log(result,"result")
+					return result 
+			}
+			
+			
+	}
 }
